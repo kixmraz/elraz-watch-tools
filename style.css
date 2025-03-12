@@ -33,7 +33,7 @@ body {
 
 .clock {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 2.5em; /* Taille moyenne réduite de 4em à 2.5em */
+    font-size: 2.5em;
     color: #ff0000;
     text-shadow: 0 0 8px #ff0000;
     letter-spacing: 3px;
@@ -66,7 +66,7 @@ body {
 .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
+    gap: 8px; /* Plus d'espace pour voir la lueur */
 }
 
 button.rgb {
@@ -74,19 +74,53 @@ button.rgb {
     font-size: 1em;
     border: none;
     border-radius: 5px;
-    background: #333;
+    background: rgba(51, 51, 51, 0.8); /* Fond semi-transparent pour effet lumineux */
     color: white;
     cursor: pointer;
     transition: all 0.3s;
-    animation: rgbGlow 3s infinite;
+    position: relative;
+    overflow: hidden; /* Pour contenir les effets */
 }
 
+/* Effet au survol */
 button.rgb:hover {
     transform: scale(1.05);
 }
 
-.operator {
-    background: #550000;
+/* Touches vertes : 7, 4, 1, 0, C, =, -, *, / */
+button.green {
+    background: rgba(0, 204, 0, 0.3); /* Vert transparent */
+    color: #fff;
+    box-shadow: 
+        0 0 15px #00ff00, /* Lueur externe */
+        inset 0 -5px 15px #00ff00; /* Lueur interne venant de dessous */
+}
+
+/* Touches rouges : 8, 5, 2, . */
+button.red {
+    background: rgba(204, 0, 0, 0.3); /* Rouge transparent */
+    color: #fff;
+    box-shadow: 
+        0 0 15px #ff0000, 
+        inset 0 -5px 15px #ff0000;
+}
+
+/* Touches bleues : 9, 6, 3, + */
+button.blue {
+    background: rgba(0, 0, 204, 0.3); /* Bleu transparent */
+    color: #fff;
+    box-shadow: 
+        0 0 15px #0000ff, 
+        inset 0 -5px 15px #0000ff;
+}
+
+/* Opérateurs restants en vert par défaut */
+button.operator:not(.blue) {
+    background: rgba(0, 204, 0, 0.3);
+    color: #fff;
+    box-shadow: 
+        0 0 15px #00ff00, 
+        inset 0 -5px 15px #00ff00;
 }
 
 .equals {
@@ -95,12 +129,4 @@ button.rgb:hover {
 
 .clear {
     grid-column: span 2;
-    background: #550000;
-}
-
-@keyframes rgbGlow {
-    0% { box-shadow: 0 0 5px #ff0000; }
-    33% { box-shadow: 0 0 5px #00ff00; }
-    66% { box-shadow: 0 0 5px #0000ff; }
-    100% { box-shadow: 0 0 5px #ff0000; }
 }
