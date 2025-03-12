@@ -20,53 +20,50 @@ setInterval(updateClock, 1000);
 const display = document.getElementById('display');
 const buttons = document.querySelectorAll('.rgb');
 
-let currentInput = '';
-let operator = '';
-let firstOperand = '';
+let currentExpression = '';
+let lastResult = null;
 
 buttons.forEach(button => {
     button.addEventListener('click', () => {
         const value = button.textContent;
 
         if (button.classList.contains('clear')) {
-            currentInput = '';
-            operator = '';
-            firstOperand = '';
+            currentExpression = '';
+            lastResult = null;
             display.value = '';
             return;
         }
 
         if (button.classList.contains('operator') && value !== '=') {
-            if (currentInput !== '') {
-                firstOperand = currentInput;
-                currentInput = '';
-                operator = value;
+            if (lastResult !== null && currentExpression === '') {
+                currentExpression = lastResult + value;
+            } else {
+                currentExpression += value;
             }
+            display.value = currentExpression;
             return;
         }
 
         if (value === '=') {
-            if (firstOperand && operator && currentInput) {
-                const result = calculate(parseFloat(firstOperand), parseFloat(currentInput), operator);
+            try {
+                const result = eval(currentExpression);
                 display.value = result;
-                currentInput = result;
-                firstOperand = '';
-                operator = '';
+                currentExpression = '';
+                lastResult = result;
+            } catch (error) {
+                display.value = 'Error';
+                currentExpression = '';
+                lastResult = null;
             }
             return;
         }
 
-        currentInput += value;
-        display.value = currentInput;
+        if (lastResult !== null && !button.classList.contains('operator')) {
+            currentExpression = value;
+            lastResult = null;
+        } else {
+            currentExpression += value;
+        }
+        display.value = currentExpression;
     });
 });
-
-function calculate(a, b, op) {
-    switch (op) {
-        case '+': return a + b;
-        case '-': return a - b;
-        case '*': return a * b;
-        case '/': return b !== 0 ? a / b : 'Error';
-        default: return 0;
-    }
-}
